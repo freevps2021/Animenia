@@ -1,0 +1,40 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-6" id="profile-form">
+      <div class="form-group">
+        <label for="firstName">first Name:</label>
+        <input type="text" name="firstName" class="form-control" [(ngModel)]='profile.personalInfos.firstName'>
+      </div>
+      <div class="form-group">
+        <label for="lastName">Last Name:</label>
+        <input type="text" name="lastName" class="form-control" [(ngModel)]='profile.personalInfos.lastName'>
+      </div>
+      <div class="form-group">
+        <li>
+          <label for="year">year:</label>
+          <input type="text" name="birthDateYear" class="form-control"
+           [(ngModel)]='profile.personalInfos.birthDate.year'>
+        </li>
+        <li>
+          <label for="month">Month:</label>
+          <input type="text" name="birthDateMonth" class="form-control"
+           [(ngModel)]='profile.personalInfos.birthDate.month'>
+        </li>
+        <li>
+          <label for="day">day:</label>
+          <input type="text" name="birthDateDay" class="form-control"
+           [(ngModel)]='profile.personalInfos.birthDate.day'>
+        </li>
+      </div>
+      <div class="form-group">
+        <label for="telephone">Phone Number:</label>
+        <input type="text" name="telephone" class="form-control" [(ngModel)]='profile.personalInfos.telephone'>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block" (click)="initProfile()">Build Profile</button>
+    </div>
+  </div>
+</div>
+
+
+
+

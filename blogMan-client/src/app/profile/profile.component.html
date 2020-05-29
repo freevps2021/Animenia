@@ -1,0 +1,247 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-2">
+      <img *ngIf="profile?.profile?.avatar_url" src='{{profile?.profile?.avatar_url}}' class="avatar"  alt="avatar">
+      <div class="form-group">
+        <label for="avatar" class="btn btn-primary btn-sm">Choose image</label>
+        <input type="file" id="avatar" enctype='multipart/form-data'style="display: none;"
+          (change)="uploadAvatar($event.target.files)"  name="profile">
+      </div>
+    </div>
+    <div class="col-md-3">
+      <h4 class="avatar-username mt-4">{{profile?.profile.username}}</h4>
+    </div>
+    <div class="col-md-4 offset-md-3">
+      <button style="height:40px" class="btn btn-primary mt-4"
+      *ngIf="!isFriend && profile?.profile?.user !== authUser._id "
+       (click)="sendFriendRequest()">Introvert with {{profile?.profile.username}}</button>
+       <button style="height:40px" class="btn btn-danger mt-4"
+       *ngIf="isFriend && profile?.profile?.user !== authUser._id "
+        (click)="deleteFriend(profile.profile.userId)">Extovert with {{profile?.profile.username}}</button>
+    </div>
+  </div>
+  <!--personal information-->
+  <section class="row mt-3 personal mb-3" *ngIf="profile?.profile?.personalInfos">
+    <div class="col-md-6">
+      <h5 class="bio" >Personal informations:</h5>
+      <ul class="bio-list">
+        <li><strong>Firstname:</strong> {{profile?.profile.personalInfos.firstName}}</li>
+        <li><strong>Lastname:</strong> {{profile?.profile.personalInfos.lastName}}</li>
+        <li><strong>Born at:</strong> {{profile?.profile.personalInfos.birthdate | date:'M/d/yy'}}</li>
+      </ul>
+    </div>
+    <div class="col-md-6">
+      <h5 class="contact-header">Contact informations:</h5>
+      <ul class="contact-infos">
+        <li><strong>Phone:</strong> 0{{profile?.profile.personalInfos.telephone}}</li>
+        <li><strong>E-Mail:</strong> {{profile?.profile.personalInfos.email}}</li>
+      </ul>
+    </div>
+  </section>
+  <!--end of personal infos section-->
+<!--show friend requests-->
+<div class="row"  *ngIf="profile?.profile?.friendReqs">
+  <div class="col-md-3" id="friendRequest" *ngFor="let req of profile?.profile?.friendReqs">
+    <div class="pending-request" *ngIf="req.status == 'pending' && req.from._id != authUser._id">
+        <h5>{{req.from.username}}</h5>
+        <button class="btn btn-success btn-sm" (click)="acceptFriendRequest(req._id)">Introvert</button>
+        <button class="btn btn-success btn-sm" (click)="declineFriendRequest(req._id)">No,thanks</button>
+    </div>
+  
+
+  </div>
+</div>
+<!--end of friend requests section-->
+
+  <!--Post a new post section-->
+  <div class="row new-post">
+    <div class="col-md-10 mt-2">
+      <app-new-post (newPostEvent)="getProfile()"></app-new-post>
+    </div>
+  </div>
+  
+  <!--end of new post section-->
+
+  <!--user posts-->
+  <div class="posts">
+    <div class="post mb-3" *ngFor='let post of posts'>
+  
+      <div *ngIf="post.isOriginal" class="regular">
+       <img src="{{post.user.avatar_url}}" class="ownerAvatar" alt="">
+      <a class="username" [routerLink]="['/../user/' + post.user._id +  '/profile']">{{post.user?.username ? post.user.username: post.username }}</a>
+     <div class="icon float-right">
+        <fa name="far fa-trash-alt"  (click)="removePost(post._id)"></fa>
+
+     </div>
+      <div class="icon float-right">
+          <fa name="fal fa-edit" *ngIf="authUser._id === post.user._id" class="edit" (click)="startEdit()"></fa>
+      </div>
+      <p *ngIf="!editingPost" class="post-content">
+       {{post.content}}
+      </p>
+      <div *ngIf="editingPost" class="editing-area">
+        <textarea  name="editPost" id="editPost" cols="30" rows="10" [(ngModel)]="editingContent">{{post.content}}</textarea>
+        <div class="btn btn-secondary btn-sm" (click)="cancelEdit()">cancel</div>
+        <div class="btn btn-primary btn-sm" (click)="editPost(post._id)">save</div>
+  
+      </div>
+      <img *ngIf="post.hasMedia" class="postMedia" src="{{post.media}}" alt="">
+
+      <div class="reactions float-left">
+       <span class="icon">
+         <fa  name='thumbs-up' (click)="likePost(post._id)"></fa>
+          <span class="numbers" *ngIf="post.likes.length > 0">{{post.likes.length}}</span>
+        </span>
+       <span class="icon">
+         <fa  name='thumbs-down' (click)="dislikePost(post._id)"></fa>
+         <span class="numbers" *ngIf="post.dislikes.length > 0">{{post.dislikes.length}}</span>
+        </span>
+       <span class="icon">
+         <fa class="fa" name="far fa-share-square" (click)="share(post._id)"></fa>
+         <span class="numbers" *ngIf="post.shares > 0">{{post.shares}}</span>
+         </span>
+      </div>
+      <!--
+      <ul class="numbers">
+          <li class="likes">Likes: {{post.likes.length}}</li>
+          <li class="shares">Shares: {{post.shares}}</li>
+          <li class="commentsNum">Comments: {{post.comments.length}}</li>
+      </ul>
+      -->
+      <br>
+      <br>
+      <div class="postDate">
+          <p>{{post.created_at | date:'M/d/yy h:m'}}</p>
+      </div>
+      <div class="commemt-form">
+        <div class="form-group">
+          <textarea name="comment" id="comment-field" cols="30" rows="10" class="form-control" *ngIf='post' placeholder="write a comment..."[(ngModel)]='newComment'></textarea>
+          <button href="#" type="submit" class="btn btn-primary btn-sm mt-1 float-right" (click)="addComment(post._id)"><strong>Comment</strong></button>
+          <div class="clearfix"></div>
+        </div>
+      </div>
+     
+      <div class="comments">
+          <div class="comment" *ngFor='let comment of post.comments'>
+            <img src="{{comment.user.avatar_url}}" class="commentAvatar" alt="">
+            <span class="user" [routerLink]="['/../user/' + comment.user._id + '/profile']">{{comment.user.username ? comment.user.username : 'Guest'}}:</span>
+            <p class="comment-content">
+                {{comment.content}}
+              </p>
+             
+              <p class="commentDate">{{comment.created_at | date:'M/d/yy h:m'}}</p>
+              <br>
+              <a href="#" *ngIf="comment.userId !== authUser._id">Like</a>
+               <span *ngIf="comment.userId !== authUser._id">-</span>
+                <span (click)="startReply()">Comment</span>
+              <div class="ownerOnlyActions float-right">
+                <a href="#">Edit</a>-<span (click)="deleteComment(post._id, comment._id)">Delete</span>
+                <div *ngIf="repling" class="reply">
+                  <textarea name="reply" id="reply-text" cols="30" rows="10" [(ngModel)]='newReply'></textarea>
+                  <div class="btn btn-primary btn-sm float-right" (click)="reply(comment._id)">reply</div>
+                </div>
+    
+              </div>
+              <div class="replies">
+                <div *ngFor="let reply of comment.replies" class="reply">
+                    <img src="{{reply.user.avatar_url}}" class="replyAvatar" alt="">
+                    <span [routerLink]="['/../user/' + reply.user._id + '/profile']">{{reply.user.username}}</span>
+                  <span>{{reply.content}}</span>
+                  <div class="reply-actions">
+                    <li class="float-right" (click)="delReply(reply._id, comment._id)" >Del</li>
+                    <li class="float-right">Edit</li>
+                    <li (click)="likeReply(reply._id)" >like</li>
+                    <li (click)="dislikeReply(reply._id)">dislike</li>
+                  </div>
+                </div>
+              </div>
+          </div>
+      </div>
+    </div>
+  
+    <!--if shared-->
+    <div *ngIf="!post.isOriginal" class="shared">
+        <img src="{{post.user.avatar_url}}" class="ownerAvatar" alt="">
+        <a class="username" [routerLink]="['/../user/' + post.user._id +  '/profile']">{{post.user?.username ? post.user.username: post.username }}</a>
+        <div class="remove float-right" (click)="removePost(post._id)"><strong>X</strong></div>
+        <div *ngIf="authUser._id === post.user._id" class="edit float-right" (click)="startEdit()">Edit</div>
+        <p *ngIf="!editingPost" class="post-content">{{post.content}}</p>
+           <div *ngIf="editingPost" class="editing-area">
+             <textarea  name="editPost" id="editPost" cols="30" rows="10" [(ngModel)]="editingContent">{{post.content}}</textarea>
+             <div class="btn btn-secondary btn-sm" (click)="cancelEdit()">cancel</div>
+             <div class="btn btn-primary btn-sm" (click)="editPost(post._id)">save</div>
+           </div>
+  
+           <div class="original-post">
+              <img src="{{post.summary.owner.avatar_url}}" class="ownerAvatar" alt="">
+              <a [routerLink]="['/../user/' + post.summary.owner._id +  '/profile']" class="owner">{{post.summary.owner.username}}</a>
+              <p class="original-date">{{post.summary.originalPost.created_at | date:'M/d/yy h:m'}}</p>
+              <p class="original-content">{{post.summary.originalPost.content}}</p>
+              <img *ngIf="post.summary.originalPost.hasMedia" class="postMedia" src="{{post.summary.originalPost.media}}" alt="">
+
+           </div>
+     
+  
+      
+      
+        <div class="reactions float-left">
+          <i (click)="likePost(post._id)"><strong>like</strong></i>
+          <i (click)="dislikePost(post._id)"><strong>dislike</strong></i>
+          <i (click)="share(post._id)"><strong>share</strong></i>
+        </div>
+        <ul class="numbers">
+            <li class="likes">Likes: {{post.likes.length}}</li>
+            <li class="shares">Shares: {{post.shares}}</li>
+            <li class="commentsNum">Comments: {{post.comments.length}}</li>
+        </ul>
+        <p class="postDate">{{post.created_at | date:'M/d/yy h:m'}}</p>
+        <div class="commemt-form">
+          <div class="form-group">
+            <textarea name="comment" id="comment-field" cols="30" rows="10" class="form-control" *ngIf='post' placeholder="write a comment..."[(ngModel)]='newComment'></textarea>
+            <button href="#" type="submit" class="btn btn-primary btn-sm mt-1 float-right" (click)="addComment(post._id)"><strong>Comment</strong></button>
+            <div class="clearfix"></div>
+          </div>
+        </div>
+       
+        <div class="comments">
+            <div class="comment" *ngFor='let comment of post.comments'>
+              <img src="{{comment.user.avatar_url}}" class="commentAvatar" alt="">
+              <span class="user" [routerLink]="['/../user/' + comment.user._id + '/profile']">{{comment.user.username ? comment.user.username : 'Guest'}}:</span>
+              <p class="comment-content">
+                  {{comment.content}}
+                </p>
+               
+                <p class="commentDate">{{comment.created_at | date:'M/d/yy h:m'}}</p>
+                <br>
+                <a href="#" *ngIf="comment.userId !== authUser._id">Like</a>
+                 <span *ngIf="comment.userId !== authUser._id">-</span>
+                  <span (click)="startReply()">Comment</span>
+                <div class="ownerOnlyActions float-right">
+                  <a href="#">Edit</a>-<span (click)="deleteComment(post._id, comment._id)">Delete</span>
+                  <div *ngIf="repling" class="reply">
+                    <textarea name="reply" id="reply-text" cols="30" rows="10" [(ngModel)]='newReply'></textarea>
+                    <div class="btn btn-primary btn-sm float-right" (click)="reply(comment._id)">reply</div>
+                  </div>
+      
+                </div>
+                <div class="replies">
+                  <div *ngFor="let reply of comment.replies" class="reply">
+                    <img src="{{reply.user.avatar_url}}" class="replyAvatar" alt="">
+                    <span class="user" [routerLink]="['/../user/' + reply.user._id + '/profile']">{{reply.user.username}}</span>
+                    <span>{{reply.content}}</span>
+                    <div class="reply-actions">
+                      <li class="float-right" (click)="delReply(reply._id, comment._id)" >Del</li>
+                      <li class="float-right">Edit</li>
+                      <li (click)="likeReply(reply._id)" >like</li>
+                      <li (click)="dislikeReply(reply._id)">dislike</li>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+  </div>
+  
+  <!--end of posts sections-->
+</div>

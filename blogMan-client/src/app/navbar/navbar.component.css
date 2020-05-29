@@ -1,0 +1,8 @@
+#searchForm{
+    position: relative;
+}
+#search-result{
+    position: absolute;
+    top:  110%;
+    width:80%;
+}

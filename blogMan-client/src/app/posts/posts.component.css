@@ -1,0 +1,132 @@
+.numbers{
+    list-style: none;
+    /*border: 1px solid #d8dfe3;
+    border-radius: 10px;
+    */
+    border-top:1px solid #d8dfe3;
+    border-bottom:1px solid #d8dfe3;    
+    height: 30px;
+
+}
+.numbers li{
+float: right;
+margin:4px; 
+font-weight: bold;
+font-size: 12px;
+color: #2F4F4F;   
+}
+.user .comment-content{
+    display:inline-block;
+}
+.post{
+padding:10px;
+border: 1px solid #d8dfe3;
+border-radius: 10px;
+background-color: white;
+width:80%;
+margin: 0 auto;
+
+}
+.reactions i {
+    font-size: 12px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+.reactions i:hover {
+    text-decoration: underline;
+    color: blue;
+    cursor: pointer;
+}
+.post-content{
+color:rgb(43, 59, 59);
+width:100%;
+
+}
+.comment-content{
+    max-width: 100%;
+}
+.post h4{
+    font-size: 14px;
+    font-weight: bold;
+}
+.posts{
+    height: 100%;
+    padding: 10px;
+    border:1px solid #d8dfe3;
+}
+.comment .user, .comment-content, .commentDate{
+    display: inline-block;
+    margin-bottom: 0;
+}
+#comment-field{
+    max-height: 34px;
+}
+#editPost{
+    max-height: 34px;
+}
+#reply-text{
+    max-height: 34px;
+}
+.reply-actions li{
+    text-decoration:underline;
+    font-size: 10px;
+    display: inline;
+    border:1px solid #ffffff; 
+
+}
+.replies{
+    margin: 4px 7px;
+}
+.reply{
+    margin:4px;
+    border-radius: 10px;
+    border:1px solid #ffffff; 
+}
+.comment .user{
+    font-weight: bold;
+}
+.comment{
+    background-color: #f5eded;
+    border-radius: 15px;
+    padding: 8px;
+    margin-bottom: 5px;
+}
+.commentDate{
+    float: right;
+    margin-right: 3px;
+    font-size: 11px;
+}
+.username{
+    color:#2F4F4F;
+    display: inline;
+}
+.comment .user{
+    color:#2F4F4F;
+    font-size:12px;
+}
+.new-post{
+    padding: 42px;
+    margin:15px auto;
+    width: 80%;
+    background-color: white;
+    border: 1px solid #d8dfe3;
+
+}
+.original-post{
+    margin: 5px;
+    border: 1px solid #d8dfe3;
+    padding: 2px;
+}
+#postAvatar{
+border-radius: 50%;
+width:50px;
+height: 50px;
+}
+.postMedia{
+    width: 80%;
+    height: 50%;
+}
+.replyAvatar{
+    border-radius: 50%;
+    width:30px;
+    height: 30px;
+    }

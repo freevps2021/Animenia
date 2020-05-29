@@ -1,0 +1,25 @@
+<div class="container">
+<div class="row">
+<div class="col-md-6 offset-md-3">
+  <form class="mt-5 p-5" id="loginForm">
+  <div class="form-group">
+    <label for="username">Username:</label>
+    <input type="text" name="username" class="form-control" [(ngModel)]='loginData.username'>
+  </div>
+ 
+  <div class="form-group">
+    <label for="password">Password:</label>
+    <input type="password" name="password" class="form-control" [(ngModel)]='loginData.password'>
+  </div>
+  <ul class="">
+    <li class="" ><a routerLink ="../forgot-password" href='#' >Forgot your password?</a></li>
+    <li  class=''><a routerLink="register" href='#'>Register</a></li>
+  </ul>
+  <button type="submit" class="btn btn-primary btn-block" (click)="login()">Login</button>
+</form>
+
+</div>
+
+</div>
+</div>
+
